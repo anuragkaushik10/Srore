@@ -1,25 +1,47 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { useEffect, useState } from "react";
+import Spinner from "./Spinner";
+import ShowData from "./ShowData";
+export default function App() {
+  const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [searchValue, setSearchValue] = useState("");
+  const url = "https://fakestoreapi.com/products/";
 
-function App() {
+  function fetchApi() {
+    fetch(url)
+      .then((res) => {
+        return res.json();
+      })
+      .then((json) => {
+        console.log(data);
+        setData(json);
+      })
+      .catch((err) => {
+        console.log("error", err);
+      });
+  }
+
+  useEffect(function () {
+    setIsLoading(true);
+    console.log(isLoading);
+    fetchApi();
+    setIsLoading(false);
+    console.log(isLoading);
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <input
+        placeholder="Search your item"
+        onChange={(e) => setSearchValue(e.target.value)}
+      ></input>
+      <div>{isLoading && <Spinner />}</div>
+      <ShowData data={data} searchValue={searchValue} />
     </div>
   );
 }
 
-export default App;
+{
+  // <div>{isLoading ? <Spinner /> : <div>adad</div>}</div>;
+}
